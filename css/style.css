@@ -1,42 +1,199 @@
-body {
-    background-color: #f0f8ff; 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    display: flex;
-    justify-content: center; 
-    align-items: center;     
-    height: 100vh;           
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Outfit', sans-serif;
 }
 
-.kartu {
-    background-color: #ffffff;
-    padding: 40px;
-    border-radius: 12px;     /* Bikin sudut kotaknya melengkung */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Kasih efek bayangan tipis */
+body {
+    /* Background abu-abu sangat muda agak kemerahan (warm white) */
+    background-color: #fcfafb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Dekorasi Lingkaran Red Velvet Blur di Background */
+.shape {
+    position: absolute;
+    filter: blur(80px);
+    z-index: 1;
+}
+
+.shape-1 {
+    width: 350px;
+    height: 350px;
+    background: rgba(163, 26, 66, 0.15); /* Red Velvet transparan */
+    top: -100px;
+    left: -100px;
+    border-radius: 50%;
+}
+
+.shape-2 {
+    width: 400px;
+    height: 400px;
+    background: rgba(138, 21, 56, 0.1);
+    bottom: -150px;
+    right: -100px;
+    border-radius: 50%;
+}
+
+.login-container {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 430px;
+    padding: 20px;
+}
+
+/* Kartu Login dengan efek 3D Pop / Floating */
+.login-card {
+    background: #ffffff;
+    padding: 50px 40px;
+    border-radius: 24px;
+    /* Kombinasi shadow berlapis buat efek 3D yang realistis */
+    box-shadow: 
+        0 20px 40px rgba(138, 21, 56, 0.08),
+        0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(138, 21, 56, 0.05);
+}
+
+.card-header {
     text-align: center;
+    margin-bottom: 40px;
 }
 
-h1 {
-    color: #2c3e50;
-    margin-bottom: 10px;
+/* Logo Box Elegan di atas judul */
+.logo-box {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #a31a42, #8a1538);
+    color: white;
+    font-size: 24px;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 16px;
+    margin: 0 auto 20px auto;
+    box-shadow: 0 10px 20px rgba(138, 21, 56, 0.2);
+    transform: rotate(-5deg);
 }
 
-p {
-    color: #34495e;
-    font-size: 18px;
+.card-header h2 {
+    font-size: 28px;
+    color: #2b1b1f; /* Warna teks sangat gelap tapi ada unsur merahnya */
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
 }
 
-.footer {
-    margin-top: 25px;
+.card-header p {
     font-size: 14px;
-    color: #95a5a6;
-    font-style: italic;
+    color: #8c7e82;
+    font-weight: 400;
 }
 
-.tombol {
-    color: #2c3e50;
-    margin: auto;
+/* Form Input dengan Interaksi Keren */
+.input-container {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.input-container input {
+    width: 100%;
+    padding: 18px 20px 14px 20px;
+    background: #f7f5f6;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    font-size: 15px;
+    color: #2b1b1f;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+/* Garis bawah Red Velvet saat input aktif */
+.input-container input:focus {
+    background: #ffffff;
+    border-bottom: 2px solid #8a1538;
+    box-shadow: 0 5px 15px rgba(138, 21, 56, 0.05);
+}
+
+.input-container label {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    font-size: 15px;
+    color: #8c7e82;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+/* Teks label naik kalau di-klik (Floating UI) */
+.input-container input:focus + label,
+.input-container input:not(:placeholder-shown) + label {
+    top: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #8a1538;
+    letter-spacing: 0.5px;
+}
+
+.action-row {
+    margin-bottom: 30px;
+}
+
+/* Custom Checkbox Red Velvet */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #63585b;
+    cursor: pointer;
+}
+
+.checkbox-container input {
+    margin-right: 10px;
+    accent-color: #8a1538;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+/* Tombol Submit 3D Red Velvet */
+.btn-submit {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #a31a42, #8a1538);
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 20px rgba(138, 21, 56, 0.25);
+}
+
+.btn-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 25px rgba(138, 21, 56, 0.35);
+}
+
+.btn-submit:active {
+    transform: translateY(1px);
+    box-shadow: 0 5px 10px rgba(138, 21, 56, 0.2);
+}
+
+.card-footer {
     text-align: center;
-    text-decoration: none;
-    border: #2c3e50;
+    margin-top: 35px;
+    font-size: 13px;
+    color: #a89ca0;
+    font-weight: 400;
 }
