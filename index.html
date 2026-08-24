@@ -1,32 +1,54 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Admin - Inventory System</title>
+    <!-- Font Outfit yang Jauh Lebih Menarik & Modern -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-
-    <title>Belajar GitHub</title>
 </head>
-
 <body>
-    <div class="kartu">
-        <h1>Belajar GitHub🚀</h1>
-        <p>Latihan nge-push ke repository github</p>
-        <div class="footer">
-            Dibuat oleh Kelompok Ganteng | SMKN 10 Surabaya
-        </div>
-<br>
-        <div class="member">
-            <h3>Informasi Tentang Kami :</h3>
-            <div class="tombol">
-             <a href="">About Us</a>
-                <script src="js/script.js">
+    <div class="login-container">
+        <!-- Elemen Dekorasi Melayang di Belakang -->
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        
+        <div class="login-card">
+            <div class="card-header">
+                <div class="logo-box">
+                    <span>KG</span>
+                </div>
+                <h2>Akses Admin</h2>
+                <p>Kelompok Ganteng | Sistem Inventory</p>
+            </div>
 
-                </script>
+            <form action="#" method="POST">
+                <div class="input-container">
+                    <input type="text" id="admin_id" name="admin_id" required placeholder=" ">
+                    <label for="admin_id">ID Admin</label>
+                </div>
+
+                <div class="input-container">
+                    <input type="password" id="password" name="password" required placeholder=" ">
+                    <label for="password">Kata Sandi</label>
+                </div>
+
+                <div class="action-row">
+                    <label class="checkbox-container">
+                        <input type="checkbox">
+                        <span class="checkmark"></span>
+                        Ingat Saya
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-submit">Masuk</button>
+            </form>
+
+            <div class="card-footer">
+                <p>&copy; 2026 Project SMKN 10 Surabaya</p>
             </div>
         </div>
     </div>
-
 </body>
 </html>
