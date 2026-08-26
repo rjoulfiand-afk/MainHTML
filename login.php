@@ -18,7 +18,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $stmt = mysqli_prepare($koneksi, $query);
 
-    mysqli_stmt_bind_param($stmt, "ss", $admin_id, $password);
+    if (!$stmt) {
+        die("Query gagal: " . mysqli_error($koneksi));
+    }
+
+    mysqli_stmt_bind_param(
+        $stmt,
+        "ss",
+        $admin_id,
+        $password
+    );
 
     mysqli_stmt_execute($stmt);
 
@@ -28,10 +37,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         $admin = mysqli_fetch_assoc($hasil);
 
+        // Membuat session login
         $_SESSION["kg_isLoggedIn"] = true;
         $_SESSION["kg_namaAdmin"] = $admin["nama"];
 
-        header("Location: dashboard.html");
+        // Pindah ke dashboard
+        header("Location: dashboard.php");
         exit;
 
     } else {
@@ -41,6 +52,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     mysqli_stmt_close($stmt);
+
+} else {
+
+    header("Location: index.html");
+    exit;
 }
 
 ?>

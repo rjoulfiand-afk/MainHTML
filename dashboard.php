@@ -1,3 +1,20 @@
+<?php
+
+session_start();
+
+if (
+    !isset($_SESSION["kg_isLoggedIn"]) ||
+    $_SESSION["kg_isLoggedIn"] !== true
+) {
+    header("Location: index.html");
+    exit;
+}
+
+include "koneksi.php";
+
+$namaAdmin = $_SESSION["kg_namaAdmin"] ?? "Admin";
+
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -27,7 +44,9 @@
         </ul>
 
         <div class="sidebar-footer">
-            <a href="index.html" class="btn-logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Keluar Sistem</a>
+            <a href="logout.php" class="btn-logout">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Keluar Sistem
+            </a>
         </div>
     </aside>
 
@@ -45,7 +64,7 @@
                 </div>
                 <div class="profile-area">
                     <div class="profile-info">
-                        <h4>Admin</h4>
+                        <h4><?php echo htmlspecialchars($namaAdmin); ?></h4>
                         <p>Super Admin</p>
                     </div>
                     <div class="profile-pic">
@@ -110,22 +129,40 @@
                             <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <!-- TEMPAT PHP MENCETAK DATA -->
-                        <!-- CONTOH FORMAT BARIS BUAT TEMEN LU: 
-                        <tr>
-                            <td class="font-mono">SN-001</td>
-                            <td class="fw-600">Barang A</td>
-                            <td><span class="tag">Jenis</span></td>
-                            <td class="stok-angka"><span class="badge safe">10</span></td>
-                            <td>Gudang A</td>
-                            <td>Vendor A</td>
-                            <td class="action-cell">
-                                <a href="edit.php?id=..." class="btn-icon edit"><i class="fa-solid fa-pen"></i></a>
-                                <a href="hapus.php?id=..." class="btn-icon delete"><i class="fa-solid fa-trash"></i></a>
-                            </td>
-                        </tr> 
-                        -->
+                   <tbody>
+                        <?php
+                         // Fauzan narik data dari tabel produk
+                        $query_produk = mysqli_query($koneksi, "SELECT * FROM produk");
+    
+                        // Looping datanya
+                        while($data = mysqli_fetch_assoc($query_produk)) {
+        
+                        // Logika dari Rixsan: Cek stok buat warna badge dan baris merah
+                        $stok = $data['stok'];
+                        $class_baris = ($stok == 0) ? "row-danger" : "";
+                        $badge_warna = ($stok == 0) ? "danger" : (($stok <= 5) ? "warning" : "safe");
+
+                        // Cetak kerangka HTML persis buatan Rixsan
+                        echo "<tr class='$class_baris'>
+                            <td class='font-mono'>" . $data['kode_produk'] . "</td>
+                            <td class='fw-600'>" . $data['nama_produk'] . "</td>
+            
+                            <!-- Karena di database Fauzan baru ada id_kategori, kita tampilkan ID-nya dulu -->
+                            <td><span class='tag'>Kategori " . $data['id_kategori'] . "</span></td>
+            
+                            <td class='stok-angka'><span class='badge $badge_warna'>$stok</span></td>
+            
+                             <!-- Kolom gudang dan vendor bisa Fauzan kembangkan nanti -->
+                            <td>Gudang Utama</td>
+                             <td>Mitra KG</td>
+            
+                             <td class='action-cell'>
+                                <button class='btn-icon edit' title='Edit'><i class='fa-solid fa-pen'></i></button>
+                                <button class='btn-icon delete' title='Hapus'><i class='fa-solid fa-trash'></i></button>
+                                </td>
+                        </tr>";
+                     }
+                        ?>
                     </tbody>
                 </table>
             </div>

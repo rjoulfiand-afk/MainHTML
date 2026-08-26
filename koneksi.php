@@ -3,7 +3,7 @@
 $host = "localhost";
 $user = "root";
 $password = "";
-$database = "inventory_db";
+$database = "inventory_toko";
 
 $koneksi = mysqli_connect($host, $user, $password, $database);
 
