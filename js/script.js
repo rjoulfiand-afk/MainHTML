@@ -1,18 +1,9 @@
-/* CATATAN UNTUK TEMAN SEKELOMPOK:
-   Logika CRUD (Tambah / Edit / Hapus barang) BELUM ada di sini.
-   Silakan lanjutkan dengan menambahkan:
-   - Fungsi untuk menambah baris baru ke tabel #inventoryTable
-   - Fungsi untuk mengedit data pada baris yang tombol .edit-nya diklik
-   - Fungsi untuk menghapus baris saat tombol .delete diklik
-   - (Opsional) simpan datanya ke localStorage atau backend
-     supaya tidak hilang saat halaman di-refresh */
-
-// ---- 1. PROTEKSI HALAMAN: HARUS LOGIN DULU ----
+// ---- PROTEKSI HALAMAN FRONTEND ----
 if (sessionStorage.getItem("kg_isLoggedIn") !== "true") {
     window.location.href = "index.html";
 }
 
-// Tampilkan nama admin yang login di topbar (kalau ada elemennya)
+// ---- UPDATE NAMA PROFIL ----
 window.addEventListener("DOMContentLoaded", () => {
     const namaAdmin = sessionStorage.getItem("kg_namaAdmin");
     const elemenNama = document.querySelector(".profile-info h4");
@@ -21,21 +12,20 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// ---- 2. AMBIL ELEMEN UTAMA ----
+// ---- FITUR PENCARIAN LIVE ----
 const tabelBody = document.querySelector("#inventoryTable tbody");
 const inputSearch = document.querySelector("#searchInput");
 
-// ---- 3. SEARCH / FILTER TABEL ----
-// Filter langsung ke baris <tr> yang sudah ada di HTML,
-// berdasarkan kolom Serial Number dan Nama Barang.
 inputSearch.addEventListener("input", function () {
     const kataKunci = this.value.trim().toLowerCase();
     const semuaBaris = tabelBody.querySelectorAll("tr");
 
     semuaBaris.forEach((tr) => {
         const kolom = tr.querySelectorAll("td");
-        if (kolom.length < 2) return; // lewati baris "tidak ada data" dsb.
+        // Pastikan baris memiliki data (bukan baris kosong)
+        if (kolom.length < 2) return; 
 
+        // Cari berdasarkan Serial Number (kolom 0) atau Nama (kolom 1)
         const serial = kolom[0].textContent.trim().toLowerCase();
         const nama = kolom[1].textContent.trim().toLowerCase();
 
@@ -43,4 +33,28 @@ inputSearch.addEventListener("input", function () {
         tr.style.display = cocok ? "" : "none";
     });
 });
+// ---- FITUR MODAL POP-UP TAMBAH BARANG ----
+const btnAdd = document.querySelector(".btn-add"); // Tombol di atas tabel
+const modalTambah = document.getElementById("modalTambah");
+const btnCloseModal = document.getElementById("btnCloseModal"); // Ikon X
+const btnCancelModal = document.getElementById("btnCancelModal"); // Tombol Batal
 
+// Fungsi buka modal
+function bukaModal() {
+    modalTambah.classList.add("show");
+}
+
+function tutupModal() {
+    modalTambah.classList.remove("show");
+}
+
+if(btnAdd) btnAdd.addEventListener("click", bukaModal);
+if(btnCloseModal) btnCloseModal.addEventListener("click", tutupModal);
+if(btnCancelModal) btnCancelModal.addEventListener("click", tutupModal);
+
+// Tutup modal kalau user ngeklik sembarang di luar area kotak putih
+window.addEventListener("click", function(e) {
+    if (e.target === modalTambah) {
+        tutupModal();
+    }
+});

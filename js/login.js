@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   try {
-    iniBerjalan(); // penanda: kalau ini tidak muncul di console, file ini tidak ke-load
+    iniBerjalan(); 
   } catch (error) {
     alert(
       "Terjadi error di login.js: " +
@@ -19,7 +19,6 @@ function iniBerjalan() {
     { id: "kelompokganteng", password: "kg2026", nama: "Super Admin" },
   ];
 
-  //AMBIL ELEMEN FORM (dengan pengecekan)
   const formLogin = document.querySelector("form");
   const inputId = document.querySelector("#admin_id");
   const inputPassword = document.querySelector("#password");

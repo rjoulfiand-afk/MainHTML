@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Admin - Inventory Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome CDN untuk Ikon Realistis -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
-    <!-- Sidebar Premium -->
     <aside class="sidebar">
         <div class="sidebar-header">
             <div class="logo-box">KG</div>
@@ -33,9 +31,7 @@
         </div>
     </aside>
 
-    <!-- Konten Utama (Kanan) -->
     <main class="main-content">
-        <!-- Topbar Realistis dengan Profil -->
         <header class="topbar">
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
@@ -49,10 +45,9 @@
                 </div>
                 <div class="profile-area">
                     <div class="profile-info">
-                        <h4>Rixsan</h4>
+                        <h4>Admin</h4>
                         <p>Super Admin</p>
                     </div>
-                    <!-- Placeholder Foto Profil -->
                     <div class="profile-pic">
                         <i class="fa-solid fa-user-tie"></i>
                     </div>
@@ -60,45 +55,45 @@
             </div>
         </header>
 
-        <!-- Widget Statistik Data (Stat Cards) -->
+        <!-- SEMUA STATISTIK DI-NOL-KAN UNTUK PHP -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-icon safe-bg"><i class="fa-solid fa-cubes"></i></div>
                 <div class="stat-info">
                     <p>Total Stok Barang</p>
-                    <h3>2,450 <span>Unit</span></h3>
+                    <h3>0 <span>Unit</span></h3>
                 </div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon primary-bg"><i class="fa-solid fa-building"></i></div>
                 <div class="stat-info">
                     <p>Gudang Aktif</p>
-                    <h3>4 <span>Cabang</span></h3>
+                    <h3>0 <span>Cabang</span></h3>
                 </div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon primary-bg"><i class="fa-solid fa-handshake"></i></div>
                 <div class="stat-info">
                     <p>Total Vendor</p>
-                    <h3>12 <span>Mitra</span></h3>
+                    <h3>0 <span>Mitra</span></h3>
                 </div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon danger-bg"><i class="fa-solid fa-triangle-exclamation"></i></div>
                 <div class="stat-info">
                     <p>Perlu Restock</p>
-                    <h3 class="text-danger">1 <span>Barang</span></h3>
+                    <h3 class="text-danger">0 <span>Barang</span></h3>
                 </div>
             </div>
         </div>
 
-        <!-- Area Tabel CRUD Premium -->
         <section class="table-section">
             <div class="table-header">
                 <div>
                     <h3>Pergerakan Inventory</h3>
                     <p>Update terakhir stok barang masuk dan keluar.</p>
                 </div>
+                <!-- Tombol Tambah (Nanti diarahkan ke form PHP) -->
                 <button class="btn-add"><i class="fa-solid fa-plus"></i> Tambah Barang</button>
             </div>
             
@@ -116,49 +111,69 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <!-- TEMPAT PHP MENCETAK DATA -->
+                        <!-- CONTOH FORMAT BARIS BUAT TEMEN LU: 
                         <tr>
-                            <td class="font-mono">SN-2026-001</td>
-                            <td class="fw-600">Laptop Asus ROG</td>
-                            <td><span class="tag">Elektronik</span></td>
-                            <td class="stok-angka"><span class="badge safe">15</span></td>
-                            <td>Gudang Etalase</td>
-                            <td>PT Asus Indonesia</td>
+                            <td class="font-mono">SN-001</td>
+                            <td class="fw-600">Barang A</td>
+                            <td><span class="tag">Jenis</span></td>
+                            <td class="stok-angka"><span class="badge safe">10</span></td>
+                            <td>Gudang A</td>
+                            <td>Vendor A</td>
                             <td class="action-cell">
-                                <button class="btn-icon edit" title="Edit"><i class="fa-solid fa-pen"></i></button>
-                                <button class="btn-icon delete" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                                <a href="edit.php?id=..." class="btn-icon edit"><i class="fa-solid fa-pen"></i></a>
+                                <a href="hapus.php?id=..." class="btn-icon delete"><i class="fa-solid fa-trash"></i></a>
                             </td>
-                        </tr>
-                        <!-- Data Stok Habis -->
-                        <tr>
-                            <td class="font-mono">SN-2026-002</td>
-                            <td class="fw-600">Printer Epson L3210</td>
-                            <td><span class="tag">Hardware</span></td>
-                            <td class="stok-angka"><span class="badge danger">0</span></td>
-                            <td>Gudang Belakang</td>
-                            <td>Epson Master</td>
-                            <td class="action-cell">
-                                <button class="btn-icon edit" title="Edit"><i class="fa-solid fa-pen"></i></button>
-                                <button class="btn-icon delete" title="Hapus"><i class="fa-solid fa-trash"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="font-mono">SN-2026-003</td>
-                            <td class="fw-600">Kabel LAN UTP 50m</td>
-                            <td><span class="tag">Jaringan</span></td>
-                            <td class="stok-angka"><span class="badge safe">42</span></td>
-                            <td>Rak Jaringan</td>
-                            <td>Indo Cemerlang</td>
-                            <td class="action-cell">
-                                <button class="btn-icon edit" title="Edit"><i class="fa-solid fa-pen"></i></button>
-                                <button class="btn-icon delete" title="Hapus"><i class="fa-solid fa-trash"></i></button>
-                            </td>
-                        </tr>
+                        </tr> 
+                        -->
                     </tbody>
                 </table>
             </div>
         </section>
     </main>
-
+    <!-- MODAL POP-UP TAMBAH BARANG (Tersembunyi secara default) -->
+        <div id="modalTambah" class="modal-overlay">
+            <div class="modal-box">
+                <div class="modal-header">
+                    <h3>Tambah Barang Baru</h3>
+                    <button class="btn-close" id="btnCloseModal"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                
+                <!-- Form ini nanti gampang diintegrasikan sama temen lu pakai PHP -->
+                <form action="#" method="POST">
+                    <div class="input-group">
+                        <label>Serial Number</label>
+                        <input type="text" name="serial_number" required placeholder="Contoh: SN-001">
+                    </div>
+                    <div class="input-group">
+                        <label>Nama Barang</label>
+                        <input type="text" name="nama_barang" required placeholder="Masukkan nama barang">
+                    </div>
+                    <div class="input-group">
+                        <label>Jenis Barang</label>
+                        <input type="text" name="jenis_barang" required placeholder="Elektronik, Hardware, dll">
+                    </div>
+                    <div class="input-group">
+                        <label>Kuantitas / Stok</label>
+                        <input type="number" name="stok" min="0" required placeholder="0">
+                    </div>
+                    <div class="input-group">
+                        <label>Lokasi Gudang</label>
+                        <input type="text" name="lokasi" required placeholder="Nama gudang">
+                    </div>
+                    <div class="input-group">
+                        <label>Vendor</label>
+                        <input type="text" name="vendor" required placeholder="Nama vendor">
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn-cancel" id="btnCancelModal">Batal</button>
+                        <!-- Tombol ini otomatis jadi pemicu submit ke PHP -->
+                        <button type="submit" class="btn-save">Simpan ke Database</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     <script src="js/script.js"></script>
 </body>
 </html>

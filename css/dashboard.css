@@ -417,3 +417,136 @@ td {
 }
 .text-center { text-align: center; }
 .row-danger { background-color: #fffafb !important; }
+/* --- MODAL POP-UP TAMBAH BARANG --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(26, 21, 37, 0.4); /* Gelap transparan */
+    backdrop-filter: blur(4px); /* Efek blur estetik di background */
+    display: none; /* Tersembunyi dari awal */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Class trigger dari JS buat munculin modal */
+.modal-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-box {
+    background: #ffffff;
+    width: 450px;
+    max-width: 90%;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.show .modal-box {
+    transform: translateY(0);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e5e9f2;
+    padding-bottom: 12px;
+}
+
+.modal-header h3 {
+    color: #1a1525;
+    font-size: 18px;
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #a098ae;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-close:hover {
+    color: #d63031;
+}
+
+.input-group {
+    margin-bottom: 14px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 13px;
+    color: #6a6175;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #e5e9f2;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #1a1525;
+    outline: none;
+    transition: 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #8a1538;
+    box-shadow: 0 0 0 3px rgba(138, 21, 56, 0.1);
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e9f2;
+}
+
+.btn-cancel {
+    padding: 10px 18px;
+    background: #f4f6f9;
+    color: #6a6175;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.btn-cancel:hover {
+    background: #e5e9f2;
+    color: #1a1525;
+}
+
+.btn-save {
+    padding: 10px 18px;
+    background: linear-gradient(135deg, #a31a42, #8a1538);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.btn-save:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(138, 21, 56, 0.2);
+}
