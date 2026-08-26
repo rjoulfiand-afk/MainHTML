@@ -3,6 +3,7 @@ if (sessionStorage.getItem("kg_isLoggedIn") !== "true") {
     window.location.href = "index.html";
 }
 
+
 window.addEventListener("DOMContentLoaded", () => {
     const namaAdmin = sessionStorage.getItem("kg_namaAdmin");
     const elemenNama = document.querySelector(".profile-info h4");
