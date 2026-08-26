@@ -38,7 +38,7 @@ $namaAdmin = $_SESSION["kg_namaAdmin"] ?? "Admin";
         <p class="menu-label">MENU UTAMA</p>
         <ul class="nav-links">
             <li class="active"><a href="#"><i class="fa-solid fa-border-all"></i> Dashboard Utama</a></li>
-            <li><a href="#"><i class="fa-solid fa-box-open"></i> Data Barang</a></li>
+           <a href="data_barang.php"><i class="fa-solid fa-box-archive"></i> Data Barang</a>
             <li><a href="#"><i class="fa-solid fa-warehouse"></i> Lokasi Gudang</a></li>
             <li><a href="#"><i class="fa-solid fa-truck-fast"></i> Data Vendor</a></li>
         </ul>
