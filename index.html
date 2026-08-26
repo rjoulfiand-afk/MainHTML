@@ -4,16 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Admin - Inventory System</title>
-    <!-- Font Outfit yang Jauh Lebih Menarik & Modern -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Tambahan FontAwesome buat Ikon Mata -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="login-container">
-        <!-- Elemen Dekorasi Melayang di Belakang -->
         <div class="shape shape-1"></div>
         <div class="shape shape-2"></div>
-        
         <div class="login-card">
             <div class="card-header">
                 <div class="logo-box">
@@ -22,7 +21,6 @@
                 <h2>Akses Admin</h2>
                 <p>Kelompok Ganteng | Sistem Inventory</p>
             </div>
-
             <form action="#" method="POST">
                 <div class="input-container">
                     <input type="text" id="admin_id" name="admin_id" required placeholder=" ">
@@ -32,6 +30,8 @@
                 <div class="input-container">
                     <input type="password" id="password" name="password" required placeholder=" ">
                     <label for="password">Kata Sandi</label>
+                    <!-- Ikon Mata Ditambahkan Di Sini -->
+                    <i class="fa-solid fa-eye-slash toggle-password" id="togglePassword"></i>
                 </div>
 
                 <div class="action-row">
@@ -50,5 +50,20 @@
             </div>
         </div>
     </div>
+
+    <script>
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+
+        togglePassword.addEventListener('click', function (e) {
+            // Cek apakah tipe inputnya password atau text
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            
+            // Ubah ikon dari mata dicoret jadi mata kebuka
+            this.classList.toggle('fa-eye-slash');
+            this.classList.toggle('fa-eye');
+        });
+    </script>
 </body>
 </html>

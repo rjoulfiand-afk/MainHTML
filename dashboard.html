@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Inventory Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome CDN untuk Ikon Realistis -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <!-- Sidebar Premium -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-box">KG</div>
+            <div class="logo-text">
+                <h2>KelolaStok</h2>
+                <p>Kelompok Ganteng</p>
+            </div>
+        </div>
+        
+        <p class="menu-label">MENU UTAMA</p>
+        <ul class="nav-links">
+            <li class="active"><a href="#"><i class="fa-solid fa-border-all"></i> Dashboard Utama</a></li>
+            <li><a href="#"><i class="fa-solid fa-box-open"></i> Data Barang</a></li>
+            <li><a href="#"><i class="fa-solid fa-warehouse"></i> Lokasi Gudang</a></li>
+            <li><a href="#"><i class="fa-solid fa-truck-fast"></i> Data Vendor</a></li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <a href="index.html" class="btn-logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Keluar Sistem</a>
+        </div>
+    </aside>
+
+    <!-- Konten Utama (Kanan) -->
+    <main class="main-content">
+        <!-- Topbar Realistis dengan Profil -->
+        <header class="topbar">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" placeholder="Cari Serial Number atau Nama Barang...">
+            </div>
+            
+            <div class="topbar-right">
+                <div class="notification">
+                    <i class="fa-regular fa-bell"></i>
+                    <span class="dot"></span>
+                </div>
+                <div class="profile-area">
+                    <div class="profile-info">
+                        <h4>Rixsan</h4>
+                        <p>Super Admin</p>
+                    </div>
+                    <!-- Placeholder Foto Profil -->
+                    <div class="profile-pic">
+                        <i class="fa-solid fa-user-tie"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Widget Statistik Data (Stat Cards) -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon safe-bg"><i class="fa-solid fa-cubes"></i></div>
+                <div class="stat-info">
+                    <p>Total Stok Barang</p>
+                    <h3>2,450 <span>Unit</span></h3>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon primary-bg"><i class="fa-solid fa-building"></i></div>
+                <div class="stat-info">
+                    <p>Gudang Aktif</p>
+                    <h3>4 <span>Cabang</span></h3>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon primary-bg"><i class="fa-solid fa-handshake"></i></div>
+                <div class="stat-info">
+                    <p>Total Vendor</p>
+                    <h3>12 <span>Mitra</span></h3>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon danger-bg"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <div class="stat-info">
+                    <p>Perlu Restock</p>
+                    <h3 class="text-danger">1 <span>Barang</span></h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Area Tabel CRUD Premium -->
+        <section class="table-section">
+            <div class="table-header">
+                <div>
+                    <h3>Pergerakan Inventory</h3>
+                    <p>Update terakhir stok barang masuk dan keluar.</p>
+                </div>
+                <button class="btn-add"><i class="fa-solid fa-plus"></i> Tambah Barang</button>
+            </div>
+            
+            <div class="table-responsive">
+                <table id="inventoryTable">
+                    <thead>
+                        <tr>
+                            <th>Serial Number</th>
+                            <th>Nama Barang</th>
+                            <th>Jenis Barang</th>
+                            <th>Kuantitas</th>
+                            <th>Lokasi Gudang</th>
+                            <th>Vendor</th>
+                            <th class="text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="font-mono">SN-2026-001</td>
+                            <td class="fw-600">Laptop Asus ROG</td>
+                            <td><span class="tag">Elektronik</span></td>
+                            <td class="stok-angka"><span class="badge safe">15</span></td>
+                            <td>Gudang Etalase</td>
+                            <td>PT Asus Indonesia</td>
+                            <td class="action-cell">
+                                <button class="btn-icon edit" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn-icon delete" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <!-- Data Stok Habis -->
+                        <tr>
+                            <td class="font-mono">SN-2026-002</td>
+                            <td class="fw-600">Printer Epson L3210</td>
+                            <td><span class="tag">Hardware</span></td>
+                            <td class="stok-angka"><span class="badge danger">0</span></td>
+                            <td>Gudang Belakang</td>
+                            <td>Epson Master</td>
+                            <td class="action-cell">
+                                <button class="btn-icon edit" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn-icon delete" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-mono">SN-2026-003</td>
+                            <td class="fw-600">Kabel LAN UTP 50m</td>
+                            <td><span class="tag">Jaringan</span></td>
+                            <td class="stok-angka"><span class="badge safe">42</span></td>
+                            <td>Rak Jaringan</td>
+                            <td>Indo Cemerlang</td>
+                            <td class="action-cell">
+                                <button class="btn-icon edit" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn-icon delete" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

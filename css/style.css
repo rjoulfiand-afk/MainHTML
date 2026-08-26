@@ -4,9 +4,8 @@
     box-sizing: border-box;
     font-family: 'Outfit', sans-serif;
 }
-
 body {
-    /* Background abu-abu sangat muda agak kemerahan (warm white) */
+
     background-color: #fcfafb;
     display: flex;
     justify-content: center;
@@ -16,7 +15,6 @@ body {
     position: relative;
 }
 
-/* Dekorasi Lingkaran Red Velvet Blur di Background */
 .shape {
     position: absolute;
     filter: blur(80px);
@@ -197,4 +195,24 @@ body {
     color: #a89ca0;
     font-weight: 400;
 }
+/* --- TAMBAHAN UNTUK IKON MATA PASSWORD --- */
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 18px;
+    transform: translateY(-50%);
+    color: #8c7e82;
+    cursor: pointer;
+    font-size: 16px;
+    transition: color 0.3s ease;
+    z-index: 10;
+}
 
+.toggle-password:hover {
+    color: #8a1538; /* Berubah jadi warna Red Velvet pas disorot */
+}
+
+/* Biar teks ketikan password nggak nabrak ikon mata */
+.input-container input#password {
+    padding-right: 45px;
+}
