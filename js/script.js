@@ -1,15 +1,8 @@
-/* ============================================================
-   DASHBOARD LOGIC - KelolaStok (Kelompok Ganteng)
-   Berisi: proteksi login, search/filter, dan CRUD (Tambah/Edit/Hapus)
-   Data masih disimpan di memori (array JS), belum ke database.
-   ============================================================ */
-
 // ---- 0. PROTEKSI HALAMAN: HARUS LOGIN DULU ----
 if (sessionStorage.getItem("kg_isLoggedIn") !== "true") {
     window.location.href = "index.html";
 }
 
-// Tampilkan nama admin yang login di topbar (kalau ada elemennya)
 window.addEventListener("DOMContentLoaded", () => {
     const namaAdmin = sessionStorage.getItem("kg_namaAdmin");
     const elemenNama = document.querySelector(".profile-info h4");
@@ -25,8 +18,7 @@ const tombolTambah = document.querySelector(".btn-add");
 
 // ---- 2. DATA BARANG ----
 // Data disimpan di localStorage supaya tidak hilang saat refresh.
-// Kalau localStorage kosong (pertama kali buka), data awal diambil
-// dari isi tabel HTML yang sudah ada di dashboard.html.
+
 let daftarBarang = [];
 let idBerikutnya = 1;
 
@@ -285,10 +277,9 @@ formBarang.addEventListener("submit", function (e) {
 
     renderTabel();
     tutupModal();
-    inputSearch.value = ""; // reset pencarian biar data baru terlihat
+    inputSearch.value = "";
 });
 
-// ---- 10. EDIT & HAPUS (pakai event delegation ke tbody) ----
 tabelBody.addEventListener("click", function (e) {
     const tombolEdit = e.target.closest(".btn-icon.edit");
     const tombolHapus = e.target.closest(".btn-icon.delete");
@@ -314,8 +305,6 @@ tabelBody.addEventListener("click", function (e) {
 });
 
 // ---- 11. INISIALISASI SAAT HALAMAN DIBUKA ----
-// Cek dulu apakah ada data tersimpan dari sesi sebelumnya (localStorage).
-// Kalau tidak ada (baru pertama kali buka), baca dari isi tabel HTML asli.
 const berhasilMuatDariLocalStorage = muatDariLocalStorage();
 if (!berhasilMuatDariLocalStorage) {
     bacaDataAwalDariTabel();

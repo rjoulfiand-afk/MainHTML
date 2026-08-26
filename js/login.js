@@ -1,5 +1,3 @@
-alert("TES: login.js berhasil dimuat oleh browser.");
-
 document.addEventListener("DOMContentLoaded", function () {
   try {
     iniBerjalan(); // penanda: kalau ini tidak muncul di console, file ini tidak ke-load
@@ -21,7 +19,7 @@ function iniBerjalan() {
     { id: "kelompokganteng", password: "kg2026", nama: "Super Admin" },
   ];
 
-  // ---- 2. AMBIL ELEMEN FORM (dengan pengecekan) ----
+  //AMBIL ELEMEN FORM (dengan pengecekan)
   const formLogin = document.querySelector("form");
   const inputId = document.querySelector("#admin_id");
   const inputPassword = document.querySelector("#password");
@@ -43,10 +41,9 @@ function iniBerjalan() {
         elemenHilang.join("\n") +
         "\n\nKemungkinan file index.html/git.html yang dipakai berbeda dari yang seharusnya.",
     );
-    return; // hentikan, jangan lanjut karena akan error lagi
+    return;
   }
 
-  // ---- Buat elemen pesan error kalau belum ada ----
   let pesanError = document.querySelector("#loginError");
   if (!pesanError) {
     pesanError = document.createElement("p");
@@ -75,7 +72,6 @@ function iniBerjalan() {
     pesanError.style.display = "none";
   }
 
-  // ---- 3. PROSES SUBMIT LOGIN ----
   formLogin.addEventListener("submit", function (e) {
     e.preventDefault();
     console.log("[login.js] Form submit ditangkap, memproses login...");
@@ -115,7 +111,6 @@ function iniBerjalan() {
       return;
     }
 
-    // ---- LOGIN BERHASIL ----
     sessionStorage.setItem("kg_isLoggedIn", "true");
     sessionStorage.setItem("kg_namaAdmin", adminDitemukan.nama);
 
