@@ -9,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $password = trim($_POST["password"] ?? "");
 
     if ($admin_id === "" || $password === "") {
-        header("Location: ../index.html?error=kosong");
+        header("Location: ../index.php?error=kosong");
         exit;
     }
 
@@ -42,14 +42,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit;
 
     } else {
-        header("Location: ../index.html?error=salah");
+        header("Location: ../index.php?error=salah");
         exit;
     }
 
     mysqli_stmt_close($stmt);
 
 } else {
-    header("Location: ../index.html");
+    header("Location: ../index.php");
     exit;
 }
 ?>

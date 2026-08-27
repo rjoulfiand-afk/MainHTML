@@ -1,31 +1,8 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Generation Time: Aug 26, 2026 at 04:23 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `inventory_toko`
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table `admin`
---
 
 CREATE TABLE `admin` (
   `id` int(11) NOT NULL,
@@ -36,19 +13,11 @@ CREATE TABLE `admin` (
   `email` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `admin`
---
 
 INSERT INTO `admin` (`id`, `nomor_id`, `password`, `nama`, `kontak`, `email`) VALUES
 (1, 'kelompokganteng', 'kg2026', 'Super Admin', '081234567890', 'admin@kelompokganteng.com'),
 (2, 'admin', 'admin123', 'Admin Biasa', '089876543210', 'admin@sekolah.com');
 
--- --------------------------------------------------------
-
---
--- Table structure for table `inventory`
---
 
 CREATE TABLE `inventory` (
   `id_barang` int(11) NOT NULL,
@@ -69,11 +38,6 @@ INSERT INTO `inventory` (`id_barang`, `serial_number`, `nama_barang`, `jenis_bar
 (1, 'SN-2026-001', 'Laptop Asus ROG', 'Elektronik', 15, 15000000, 1, 1),
 (2, 'SN-2026-002', 'Printer Epson L3210', 'Hardware', 0, 2500000, 2, 2);
 
--- --------------------------------------------------------
-
---
--- Table structure for table `storage_unit`
---
 
 CREATE TABLE `storage_unit` (
   `id_gudang` int(11) NOT NULL,
@@ -181,10 +145,3 @@ ALTER TABLE `inventory`
   ADD CONSTRAINT `inventory_ibfk_1` FOREIGN KEY (`id_gudang`) REFERENCES `storage_unit` (`id_gudang`),
   ADD CONSTRAINT `inventory_ibfk_2` FOREIGN KEY (`id_vendor`) REFERENCES `vendor` (`id_vendor`);
 COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-
-/* Bramantyo Was Here*/

@@ -3,7 +3,7 @@ session_start();
 include "../config/koneksi.php";
 
 if (!isset($_SESSION["kg_isLoggedIn"])) {
-    header("Location: ../index.html");
+    header("Location: ../index.php");
     exit;
 }
 if ($_SERVER["REQUEST_METHOD"] === "POST") {

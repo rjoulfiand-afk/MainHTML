@@ -2,15 +2,11 @@
 session_start();
 include "config/koneksi.php";
 
-// Proteksi Halaman Login
 if (!isset($_SESSION["kg_isLoggedIn"]) || $_SESSION["kg_isLoggedIn"] !== true) {
     header("Location: index.html?error=unauthorized");
     exit;
 }
-
-// Ambil data terbaru dari tabel inventory
-$query = "SELECT * FROM inventory";
-$result = mysqli_query($koneksi, $query);
+$namaAdmin = $_SESSION["kg_namaAdmin"] ?? "Admin Utama";
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -21,129 +17,258 @@ $result = mysqli_query($koneksi, $query);
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/style.css">
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Outfit', sans-serif;
-            background-color: #f4f6f9;
-            color: #333;
-        }
-        .app-container {
-            display: flex;
-            min-height: 100vh;
-            width: 100%;
-        }
-        .sidebar {
-            width: 260px;
-            background: #ffffff;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            border-right: 1px solid #eef2f5;
-            flex-shrink: 0;
-        }
-        .main-content {
-            flex: 1;
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-        }
-    </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div>
-                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 30px;">
-                    <div style="background: #800020; color: #fff; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700;">KG</div>
-                    <div>
-                        <h3 style="margin: 0; font-size: 16px; font-weight: 700;">KelolaStok</h3>
-                        <p style="margin: 0; font-size: 12px; color: #888;">Kelompok Ganteng</p>
-                    </div>
-                </div>
-
-                <div style="font-size: 11px; font-weight: 700; color: #aaa; letter-spacing: 0.5px; margin-bottom: 15px;">MENU UTAMA</div>
-                <ul style="list-style: none; padding: 0; margin: 0;">
-                    <li style="margin-bottom: 8px;">
-                        <a href="dashboard.php" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 10px; color: #555; text-decoration: none; font-weight: 500;"><i class="fa-solid fa-border-all"></i> Dashboard Utama</a>
-                    </li>
-                    <li style="margin-bottom: 8px;">
-                        <a href="data_barang.php" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 10px; background: #fff0f3; color: #800020; text-decoration: none; font-weight: 600;"><i class="fa-solid fa-box-archive"></i> Data Barang</a>
-                    </li>
-                    <li style="margin-bottom: 8px;">
-                        <a href="lokasi_gudang.php" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 10px; color: #555; text-decoration: none; font-weight: 500;"><i class="fa-solid fa-warehouse"></i> Lokasi Gudang</a>
-                    </li>
-                    <li style="margin-bottom: 8px;">
-                        <a href="data_vendor.php" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 10px; color: #555; text-decoration: none; font-weight: 500;"><i class="fa-solid fa-truck-field"></i> Data Vendor</a>
-                    </li>
-                </ul>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-box">KG</div>
+            <div class="logo-text">
+                <h2>KelolaStok</h2>
+                <p>Kelompok Ganteng</p>
             </div>
+        </div>
+        
+        <p class="menu-label">MENU UTAMA</p>
+        <ul class="nav-links">
+            <li><a href="dashboard.php"><i class="fa-solid fa-border-all"></i> Dashboard Utama</a></li>
+            <li class="active"><a href="data_barang.php"><i class="fa-solid fa-box-archive"></i> Data Barang</a></li>
+            <li><a href="#"><i class="fa-solid fa-warehouse"></i> Lokasi Gudang</a></li>
+            <li><a href="#"><i class="fa-solid fa-truck-fast"></i> Data Vendor</a></li>
+        </ul>
 
-            <div>
-                <a href="actions/logout.php" style="display: flex; align-items: center; gap: 10px; color: #555; text-decoration: none; font-weight: 500; padding: 10px;"><i class="fa-solid fa-right-from-bracket"></i> Keluar Sistem</a>
+        <div class="sidebar-footer">
+            <a href="actions/logout.php" class="btn-logout">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Keluar Sistem
+            </a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="pencarianDetail" placeholder="Cari Serial Number atau Nama...">
             </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Topbar -->
-            <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-                <div style="background: #fff; padding: 12px 20px; border-radius: 12px; width: 360px; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
-                    <i class="fa-solid fa-magnifying-glass" style="color: #aaa;"></i>
-                    <input type="text" placeholder="Cari Serial Number atau Nama Barang..." style="border: none; outline: none; width: 100%; background: transparent;">
-                </div>
-                <div style="display: flex; align-items: center; gap: 15px; background: #fff; padding: 8px 16px; border-radius: 12px;">
-                    <i class="fa-regular fa-bell" style="color: #666; font-size: 18px;"></i>
-                    <div style="text-align: right;">
-                        <h4 style="margin: 0; font-size: 14px;"><?= htmlspecialchars($_SESSION["kg_namaAdmin"] ?? 'Admin Utama'); ?></h4>
-                        <p style="margin: 0; font-size: 11px; color: #888;">Super Admin</p>
+            
+            <div class="topbar-right">
+                <div class="profile-area">
+                    <div class="profile-info">
+                        <h4><?php echo htmlspecialchars($namaAdmin); ?></h4>
+                        <p>Super Admin</p>
                     </div>
-                    <div style="width: 36px; height: 36px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-user" style="color: #666;"></i></div>
+                    <div class="profile-pic"><i class="fa-solid fa-user-tie"></i></div>
                 </div>
-            </header>
+            </div>
+        </header>
 
-            <!-- Table Card -->
-            <section style="background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); flex: 1;">
-                <div style="margin-bottom: 24px;">
-                    <h2 style="margin: 0; font-size: 20px; color: #222;">Daftar Data Barang</h2>
-                    <p style="margin: 4px 0 0 0; color: #888; font-size: 13px;">Manajemen seluruh produk dan stok barang.</p>
+        <section class="table-section">
+            <div class="table-header">
+                <div>
+                    <h3>Manajemen Data Barang</h3>
+                    <p>Kontrol penuh (CRUD) dan detail rinci produk.</p>
                 </div>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <!-- Filter A-Z Sederhana -->
+                    <select id="filterSort" style="padding: 10px; border-radius: 8px; border: 1px solid #ddd; outline: none;">
+                        <option value="default">Urutkan: Default</option>
+                        <option value="az">Nama: A - Z</option>
+                        <option value="za">Nama: Z - A</option>
+                    </select>
 
-                <table style="width: 100%; border-collapse: collapse;">
+                    <button class="btn-add" id="btnTambahDataBarang">
+                        <i class="fa-solid fa-plus"></i> Tambah Barang
+                    </button>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table id="tabelDataBarang">
                     <thead>
-                        <tr style="text-align: left; border-bottom: 2px solid #f4f6f9; color: #999; font-size: 12px; letter-spacing: 0.5px;">
-                            <th style="padding: 14px 12px;">SERIAL NUMBER</th>
-                            <th style="padding: 14px 12px;">NAMA BARANG</th>
-                            <th style="padding: 14px 12px;">KATEGORI</th>
-                            <th style="padding: 14px 12px;">KUANTITAS</th>
+                        <tr>
+                            <th>Serial Number</th>
+                            <th>Nama Barang</th>
+                            <th>Jenis</th>
+                            <th>Harga</th>
+                            <th>Stok</th>
+                            <th>Gudang</th>
+                            <th>Vendor</th>
+                            <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if ($result && mysqli_num_rows($result) > 0): ?>
-                            <?php while ($row = mysqli_fetch_assoc($result)): ?>
-                                <tr style="border-bottom: 1px solid #f8f9fa;">
-                                    <td style="padding: 16px 12px; font-weight: 600; color: #555;"><?= htmlspecialchars($row['serial_number'] ?? '-'); ?></td>
-                                    <td style="padding: 16px 12px; font-weight: 600; color: #222;"><?= htmlspecialchars($row['nama_barang'] ?? $row['nama'] ?? '-'); ?></td>
-                                    <td style="padding: 16px 12px;"><span style="background: #f4f6f9; padding: 4px 10px; border-radius: 6px; font-size: 12px; color: #666; font-weight: 500;"><?= htmlspecialchars($row['kategori'] ?? 'Umum'); ?></span></td>
-                                    <td style="padding: 16px 12px; font-weight: 700; color: <?= ($row['kuantitas'] ?? 0) > 0 ? '#2e7d32' : '#d32f2f'; ?>;"><?= htmlspecialchars($row['kuantitas'] ?? $row['stok'] ?? 0); ?></td>
-                                </tr>
-                            <?php endwhile; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="4" style="text-align: center; padding: 40px; color: #999;">Belum ada data barang tersedia.</td>
-                            </tr>
-                        <?php endif; ?>
+                        <?php
+                        $query = "SELECT inventory.*, storage_unit.nama_gudang, vendor.nama_vendor 
+                                    FROM inventory 
+                                    LEFT JOIN storage_unit ON inventory.id_gudang = storage_unit.id_gudang 
+                                    LEFT JOIN vendor ON inventory.id_vendor = vendor.id_vendor 
+                                    WHERE inventory.status_hapus = 0"; 
+                        $result = mysqli_query($koneksi, $query);
+
+                        while($row = mysqli_fetch_assoc($result)) {
+                            $stok = $row['kuantitas_stok'];
+                            $hargaRp = "Rp " . number_format($row['harga'], 0, ',', '.');
+                            $id_brg = $row['id_barang'];
+                            $sn = $row['serial_number'];
+                            $nama = $row['nama_barang'];
+                            $jenis = $row['jenis_barang'];
+                            $harga = $row['harga'];
+                            $id_g = $row['id_gudang'] ?? '';
+                            $id_v = $row['id_vendor'] ?? '';
+
+                            echo "<tr>
+                                <td class='font-mono'>" . htmlspecialchars($sn) . "</td>
+                                <td class='fw-600 nama-item'>" . htmlspecialchars($nama) . "</td>
+                                <td><span class='tag'>" . htmlspecialchars($jenis) . "</span></td>
+                                <td>$hargaRp</td>
+                                <td><span class='badge'>" . $stok . "</span></td>
+                                <td>" . htmlspecialchars($row['nama_gudang'] ?? '-') . "</td>
+                                <td>" . htmlspecialchars($row['nama_vendor'] ?? '-') . "</td>
+                                <td class='action-cell'>
+                                    <button class='btn-icon edit' onclick='bukaEdit($id_brg, \"$sn\", \"$nama\", \"$jenis\", $stok, $harga, \"$id_g\", \"$id_v\")'><i class='fa-solid fa-pen'></i></button>
+                                    <a href='actions/hapus_barang.php?id=$id_brg' class='btn-icon delete' onclick='return confirm(\"Yakin hapus $nama?\")'><i class='fa-solid fa-trash'></i></a>
+                                </td>
+                            </tr>";
+                        }
+                        ?>
                     </tbody>
                 </table>
-            </section>
-        </main>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL TAMBAH BARANG -->
+    <div id="modalTambah" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Tambah Barang Baru</h3>
+                <button class="btn-close" id="btnCloseAdd"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form action="actions/tambah_barang.php" method="POST">
+                <div class="input-group"><label>Serial Number</label><input type="text" name="serial_number" required></div>
+                <div class="input-group"><label>Nama Barang</label><input type="text" name="nama_barang" required></div>
+                <div class="input-group"><label>Jenis Barang</label><input type="text" name="jenis_barang" required></div>
+                <div class="input-group"><label>Stok</label><input type="number" name="stok" min="0" required></div>
+                <div class="input-group"><label>Harga (Rp)</label><input type="number" name="harga" min="0" required></div>
+                <div class="input-group">
+                    <label>Gudang</label>
+                    <select name="id_gudang" required style="width:100%; padding:8px;">
+                        <?php
+                        $q_gudang = mysqli_query($koneksi, "SELECT * FROM storage_unit");
+                        while($g = mysqli_fetch_assoc($q_gudang)) echo "<option value='{$g['id_gudang']}'>{$g['nama_gudang']}</option>";
+                        ?>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Vendor</label>
+                    <select name="id_vendor" required style="width:100%; padding:8px;">
+                        <?php
+                        $q_vendor = mysqli_query($koneksi, "SELECT * FROM vendor");
+                        while($v = mysqli_fetch_assoc($q_vendor)) echo "<option value='{$v['id_vendor']}'>{$v['nama_vendor']}</option>";
+                        ?>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" id="btnCancelAdd">Batal</button>
+                    <button type="submit" class="btn-save">Simpan</button>
+                </div>
+            </form>
+        </div>
     </div>
+
+    <!-- MODAL EDIT BARANG -->
+    <div id="modalEdit" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Edit Data Barang</h3>
+                <button class="btn-close" id="btnCloseEdit"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form action="actions/edit_barang.php" method="POST">
+                <input type="hidden" name="id_barang" id="edit_id">
+                <div class="input-group"><label>Serial Number</label><input type="text" name="serial_number" id="edit_sn" required></div>
+                <div class="input-group"><label>Nama Barang</label><input type="text" name="nama_barang" id="edit_nama" required></div>
+                <div class="input-group"><label>Jenis Barang</label><input type="text" name="jenis_barang" id="edit_jenis" required></div>
+                <div class="input-group"><label>Stok</label><input type="number" name="stok" id="edit_stok" min="0" required></div>
+                <div class="input-group"><label>Harga (Rp)</label><input type="number" name="harga" id="edit_harga" min="0" required></div>
+                <div class="input-group">
+                    <label>Gudang</label>
+                    <select name="id_gudang" id="edit_gudang" required style="width:100%; padding:8px;">
+                        <?php
+                        $q_gudang = mysqli_query($koneksi, "SELECT * FROM storage_unit");
+                        while($g = mysqli_fetch_assoc($q_gudang)) echo "<option value='{$g['id_gudang']}'>{$g['nama_gudang']}</option>";
+                        ?>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Vendor</label>
+                    <select name="id_vendor" id="edit_vendor" required style="width:100%; padding:8px;">
+                        <?php
+                        $q_vendor = mysqli_query($koneksi, "SELECT * FROM vendor");
+                        while($v = mysqli_fetch_assoc($q_vendor)) echo "<option value='{$v['id_vendor']}'>{$v['nama_vendor']}</option>";
+                        ?>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" id="btnCancelEditBtn">Batal</button>
+                    <button type="submit" class="btn-save">Update Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // FITUR SEARCH BARANG
+        const searchInput = document.getElementById("pencarianDetail");
+        const tbody = document.querySelector("#tabelDataBarang tbody");
+        
+        searchInput.addEventListener("keyup", function() {
+            let filter = this.value.toLowerCase();
+            let rows = tbody.querySelectorAll("tr");
+            rows.forEach(row => {
+                let text = row.textContent.toLowerCase();
+                row.style.display = text.includes(filter) ? "" : "none";
+            });
+        });
+
+        // FITUR SORTING A-Z
+        const filterSort = document.getElementById("filterSort");
+        filterSort.addEventListener("change", function() {
+            let rows = Array.from(tbody.querySelectorAll("tr"));
+            let sortType = this.value;
+
+            if(sortType === 'az' || sortType === 'za') {
+                rows.sort((a, b) => {
+                    let nameA = a.querySelector(".nama-item").textContent.toLowerCase();
+                    let nameB = b.querySelector(".nama-item").textContent.toLowerCase();
+                    if(sortType === 'az') return nameA.localeCompare(nameB);
+                    return nameB.localeCompare(nameA);
+                });
+                rows.forEach(row => tbody.appendChild(row)); // Re-append dengan urutan baru
+            } else {
+                window.location.reload(); // Balik ke urutan database default
+            }
+        });
+
+        // LOGIKA MODAL POP-UP TAMBAH & EDIT (Tanpa harus otak-atik script.js)
+        const modalAdd = document.getElementById("modalTambah");
+        const modalEdit = document.getElementById("modalEdit");
+
+        document.getElementById("btnTambahDataBarang").onclick = () => modalAdd.classList.add("show");
+        document.getElementById("btnCloseAdd").onclick = () => modalAdd.classList.remove("show");
+        document.getElementById("btnCancelAdd").onclick = () => modalAdd.classList.remove("show");
+
+        function bukaEdit(id, sn, nama, jenis, stok, harga, gudang, vendor) {
+            document.getElementById("edit_id").value = id;
+            document.getElementById("edit_sn").value = sn;
+            document.getElementById("edit_nama").value = nama;
+            document.getElementById("edit_jenis").value = jenis;
+            document.getElementById("edit_stok").value = stok;
+            document.getElementById("edit_harga").value = harga;
+            document.getElementById("edit_gudang").value = gudang;
+            document.getElementById("edit_vendor").value = vendor;
+            modalEdit.classList.add("show");
+        }
+        document.getElementById("btnCloseEdit").onclick = () => modalEdit.classList.remove("show");
+        document.getElementById("btnCancelEditBtn").onclick = () => modalEdit.classList.remove("show");
+    </script>
 </body>
 </html>
