@@ -102,11 +102,7 @@ function iniBerjalan() {
         checkboxIngat.checked = true;
     }
 
-
-    // ==========================================
-    // CEK ERROR DARI login.php
-    // ==========================================
-
+    
     const parameterURL =
         new URLSearchParams(window.location.search);
 
