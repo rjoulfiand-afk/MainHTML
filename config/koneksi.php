@@ -1,13 +1,13 @@
 <?php
 
-$host = "localhost";
+$host = file_exists('/.dockerenv') ? "db" : "localhost";
 $user = "root";
 $password = "";
 $database = "inventory_toko";
 
 $koneksi = mysqli_connect($host, $user, $password, $database);
-if (!$koneksi) {
-    die("Koneksi database gagal: " . mysqli_connect_error());
+    if (!$koneksi) {
+        die("Koneksi database gagal: " . mysqli_connect_error());
 }
 
 ?>
