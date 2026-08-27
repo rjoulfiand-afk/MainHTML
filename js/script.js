@@ -7,6 +7,7 @@ if (inputSearch && tabelBody) {
         const kataKunci = this.value.trim().toLowerCase();
         const semuaBaris = tabelBody.querySelectorAll("tr");
 
+        
         semuaBaris.forEach((tr) => {
             const kolom = tr.querySelectorAll("td");
             // Pastikan baris memiliki data (bukan baris kosong)
