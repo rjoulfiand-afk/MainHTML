@@ -51,7 +51,7 @@ while($b = mysqli_fetch_assoc($q_habis)) {
         <ul class="nav-links">
             <li class="active"><a href="dashboard.php"><i class="fa-solid fa-border-all"></i> Dashboard Utama</a></li>
             <li><a href="data_barang.php"><i class="fa-solid fa-box-archive"></i> Data Barang</a></li>
-            <li><a href="#"><i class="fa-solid fa-warehouse"></i> Lokasi Gudang</a></li>
+            <li><a href="lokasi_gudang.php" class="sidebar-link"><i class="fa-solid fa-warehouse"></i> Lokasi Gudang</a></li>
             <li><a href="#"><i class="fa-solid fa-truck-fast"></i> Data Vendor</a></li>
 
         </ul>
