@@ -18,10 +18,11 @@ body {
     background-color: #ffffff;
     border-right: 1px solid #e5e9f2;
     display: flex;
-    flex-direction: column;
+    flex-direction: column;       /* Mengatur elemen berjejer ke bawah */
+    justify-content: space-between; /* Mendorong elemen atas dan footer bawah agar terpisah */
     padding: 24px 20px;
-    z-index: 10;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.02);
+    height: 100vh;                /* Membuat tinggi sidebar penuh satu layar */
+    box-sizing: border-box;
 }
 
 .sidebar-header {
