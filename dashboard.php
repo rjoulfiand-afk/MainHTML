@@ -65,10 +65,16 @@ while($b = mysqli_fetch_assoc($q_habis)) {
 
     <main class="main-content">
         <header class="topbar">
-            <!-- SEARCH BAR AKTIF -->
-            <form action="data_barang.php" method="GET" class="search-box" style="margin: 0;">
+            <!-- SEARCH BAR AKTIF (Tetap di Dashboard & Teks Tidak Hilang) -->
+            <form action="dashboard.php" method="GET" class="search-box" style="margin: 0;">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" name="search" placeholder="Cari barang atau serial number..." style="background: transparent; border: none; outline: none; width: 100%;">
+                <input 
+                    type="text" 
+                    name="search" 
+                    placeholder="Cari barang atau serial number..." 
+                    value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>"
+                    style="background: transparent; border: none; outline: none; width: 100%;"
+                >
             </form>
             
             <div class="topbar-right">
@@ -161,7 +167,19 @@ while($b = mysqli_fetch_assoc($q_habis)) {
                     </thead>
                     <tbody>
                         <?php
-                        $query_inventory = mysqli_query($koneksi, "SELECT * FROM inventory WHERE status_hapus = 0 ORDER BY id_barang DESC LIMIT 5");
+                        // Ambil kata kunci dari URL search bar jika ada
+                        $search = isset($_GET['search']) ? mysqli_real_escape_string($koneksi, $_GET['search']) : '';
+
+                        if (!empty($search)) {
+                            // Query filter saat ada pencarian
+                            $query_inventory = mysqli_query($koneksi, "SELECT * FROM inventory 
+                                WHERE status_hapus = 0 
+                                AND (nama_barang LIKE '%$search%' OR serial_number LIKE '%$search%' OR jenis_barang LIKE '%$search%') 
+                                ORDER BY id_barang DESC LIMIT 5");
+                        } else {
+                            // Query default (5 data terbaru)
+                            $query_inventory = mysqli_query($koneksi, "SELECT * FROM inventory WHERE status_hapus = 0 ORDER BY id_barang DESC LIMIT 5");
+                        }
                         
                         if (mysqli_num_rows($query_inventory) > 0) {
                             while($data = mysqli_fetch_assoc($query_inventory)) {
@@ -177,7 +195,7 @@ while($b = mysqli_fetch_assoc($q_habis)) {
                                 </tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='4' style='text-align:center; padding:20px; color:#999;'>Belum ada data barang aktif.</td></tr>";
+                            echo "<tr><td colspan='4' style='text-align:center; padding:20px; color:#999;'>Tidak ditemukan barang dengan kata kunci '" . htmlspecialchars($search) . "'.</td></tr>";
                         }
                         ?>
                     </tbody>
