@@ -1,15 +1,14 @@
 <?php
 session_start();
 if (!isset($_SESSION["kg_isLoggedIn"]) || $_SESSION["kg_isLoggedIn"] !== true) {
-    header("Location: index.html");
+    header("Location: index.php");
     exit;
 }
 
 include "config/koneksi.php";
 $namaAdmin = $_SESSION["kg_namaAdmin"] ?? "Admin";
 
-// --- AMBIL SEMUA DATA STATISTIK DI AWAL BIAR AMAN ---
-// Ngitung total stok (Cuma yang aktif)
+// --- AMBIL SEMUA DATA STATISTIK DI AWAL ---
 $q_stok = mysqli_query($koneksi, "SELECT SUM(kuantitas_stok) AS total_stok FROM inventory WHERE status_hapus = 0");
 $tot_stok = mysqli_fetch_assoc($q_stok)['total_stok'] ?? 0;
 
@@ -19,11 +18,9 @@ $tot_gudang = mysqli_fetch_assoc($q_gudang)['total_gudang'] ?? 0;
 $q_vendor = mysqli_query($koneksi, "SELECT COUNT(*) AS total_vendor FROM vendor");
 $tot_vendor = mysqli_fetch_assoc($q_vendor)['total_vendor'] ?? 0;
 
-// Ngitung barang habis (Cuma yang aktif)
 $q_restock = mysqli_query($koneksi, "SELECT COUNT(*) AS total_habis FROM inventory WHERE kuantitas_stok = 0 AND status_hapus = 0");
 $tot_restock = mysqli_fetch_assoc($q_restock)['total_habis'] ?? 0;
 
-// Ambil nama-nama barang yang habis buat diisi ke Lonceng Notifikasi
 $barang_habis = [];
 $q_habis = mysqli_query($koneksi, "SELECT nama_barang FROM inventory WHERE kuantitas_stok = 0 AND status_hapus = 0");
 while($b = mysqli_fetch_assoc($q_habis)) {
@@ -56,8 +53,6 @@ while($b = mysqli_fetch_assoc($q_habis)) {
             <li><a href="data_barang.php"><i class="fa-solid fa-box-archive"></i> Data Barang</a></li>
             <li><a href="#"><i class="fa-solid fa-warehouse"></i> Lokasi Gudang</a></li>
             <li><a href="#"><i class="fa-solid fa-truck-fast"></i> Data Vendor</a></li>
-            
-            <!-- INI MENU BARU RIWAYAT HAPUSNYA BRO! -->
             <li><a href="riwayat_barang.php"><i class="fa-solid fa-trash-can-arrow-up"></i> Riwayat Hapus</a></li>
         </ul>
 
@@ -70,18 +65,17 @@ while($b = mysqli_fetch_assoc($q_habis)) {
 
     <main class="main-content">
         <header class="topbar">
-            <div class="search-box">
+            <!-- SEARCH BAR AKTIF -->
+            <form action="data_barang.php" method="GET" class="search-box" style="margin: 0;">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="Cari di menu Data Barang ya bro..." disabled style="background: transparent; border: none; cursor: not-allowed;">
-            </div>
+                <input type="text" name="search" placeholder="Cari barang atau serial number..." style="background: transparent; border: none; outline: none; width: 100%;">
+            </form>
             
             <div class="topbar-right">
-                <!-- FITUR LONCENG NOTIFIKASI HIDUP -->
                 <div class="notification" id="btnNotif" style="position: relative; cursor: pointer;">
                     <i class="fa-regular fa-bell"></i>
                     <?php if (!empty($barang_habis)) { echo '<span class="dot"></span>'; } ?>
                     
-                    <!-- Kotak Pop-Up Notif -->
                     <div id="kotakNotif" style="display: none; position: absolute; right: 0; top: 40px; background: white; width: 280px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); padding: 15px; border: 1px solid #ddd; z-index: 100;">
                         <h4 style="margin: 0 0 10px 0; font-size: 14px; border-bottom: 1px solid #eee; padding-bottom: 10px; color: #333;">Notifikasi Sistem</h4>
                         <?php if(empty($barang_habis)): ?>
@@ -89,7 +83,7 @@ while($b = mysqli_fetch_assoc($q_habis)) {
                         <?php else: ?>
                             <?php foreach($barang_habis as $b): ?>
                                 <div style="font-size: 12px; color: #d63031; margin-bottom: 8px; background: #fff0f0; padding: 8px; border-radius: 6px;">
-                                    <i class="fa-solid fa-circle-exclamation"></i> Stok <b><?= $b ?></b> Habis!
+                                    <i class="fa-solid fa-circle-exclamation"></i> Stok <b><?= htmlspecialchars($b) ?></b> Habis!
                                 </div>
                             <?php endforeach; ?>
                         <?php endif; ?>
@@ -106,7 +100,6 @@ while($b = mysqli_fetch_assoc($q_habis)) {
             </div>
         </header>
 
-        <!-- SCRIPT BUAT KLIK LONCENG -->
         <script>
             document.getElementById('btnNotif').addEventListener('click', function() {
                 var kotak = document.getElementById('kotakNotif');
@@ -153,7 +146,6 @@ while($b = mysqli_fetch_assoc($q_habis)) {
                     </thead>
                     <tbody>
                         <?php
-                        // CUMA NAMPILIN BARANG AKTIF (status_hapus = 0)
                         $query_inventory = mysqli_query($koneksi, "SELECT * FROM inventory WHERE status_hapus = 0 ORDER BY id_barang DESC LIMIT 5");
                         
                         if (mysqli_num_rows($query_inventory) > 0) {
