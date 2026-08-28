@@ -53,7 +53,7 @@ while($b = mysqli_fetch_assoc($q_habis)) {
             <li><a href="data_barang.php"><i class="fa-solid fa-box-archive"></i> Data Barang</a></li>
             <li><a href="#"><i class="fa-solid fa-warehouse"></i> Lokasi Gudang</a></li>
             <li><a href="#"><i class="fa-solid fa-truck-fast"></i> Data Vendor</a></li>
-            <li><a href="riwayat_barang.php"><i class="fa-solid fa-trash-can-arrow-up"></i> Riwayat Hapus</a></li>
+
         </ul>
 
         <div class="sidebar-footer">
@@ -90,20 +90,36 @@ while($b = mysqli_fetch_assoc($q_habis)) {
                     </div>
                 </div>
 
-                <div class="profile-area">
+                <div class="profile-area" id="btnProfile" style="position: relative; cursor: pointer;">
                     <div class="profile-info">
                         <h4><?php echo htmlspecialchars($namaAdmin); ?></h4>
                         <p>Super Admin</p>
                     </div>
                     <div class="profile-pic"><i class="fa-solid fa-user-tie"></i></div>
+                    
+                    <!-- KOTAK MENU DROPDOWN (Awalnya Sembunyi) -->
+                    <div id="kotakProfile" style="display: none; position: absolute; right: 0; top: 50px; background: white; width: 200px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 1px solid #ddd; z-index: 100; overflow: hidden;">
+                        <a href="riwayat_barang.php" style="display: block; padding: 12px 15px; color: #333; text-decoration: none; border-bottom: 1px solid #eee; font-size: 14px;">
+                            <i class="fa-solid fa-clock-rotate-left" style="margin-right: 8px;"></i> Riwayat Hapus
+                        </a>
+                        <a href="actions/logout.php" style="display: block; padding: 12px 15px; color: #d63031; text-decoration: none; font-size: 14px;">
+                            <i class="fa-solid fa-arrow-right-from-bracket" style="margin-right: 8px;"></i> Keluar Sistem
+                        </a>
+                    </div>
                 </div>
-            </div>
-        </header>
+            </div> <!-- NAH INI PENUTUP TOPBAR-RIGHT YANG TADI ILANG -->
+        </header> <!-- DAN INI PENUTUP HEADERNYA -->
 
         <script>
             document.getElementById('btnNotif').addEventListener('click', function() {
                 var kotak = document.getElementById('kotakNotif');
                 kotak.style.display = (kotak.style.display === 'none') ? 'block' : 'none';
+                document.getElementById('kotakProfile').style.display = 'none';
+            });
+            document.getElementById('btnProfile').addEventListener('click', function() {
+                var kotakProf = document.getElementById('kotakProfile');
+                kotakProf.style.display = (kotakProf.style.display === 'none') ? 'block' : 'none';
+                document.getElementById('kotakNotif').style.display = 'none';
             });
         </script>
 
@@ -125,7 +141,6 @@ while($b = mysqli_fetch_assoc($q_habis)) {
                 <div class="stat-info"><p>Perlu Restock</p><h3 class="text-danger"><?php echo $tot_restock; ?> <span>Barang</span></h3></div>
             </div>
         </div>
-
         <section class="table-section">
             <div class="table-header">
                 <div>
