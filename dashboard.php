@@ -151,7 +151,7 @@ while($b = mysqli_fetch_assoc($q_habis)) {
             <div class="table-header">
                 <div>
                     <h3>Ringkasan Inventory</h3>
-                    <p>Status ketersediaan barang saat ini (Hanya Tampilan).</p>
+
                 </div>
             </div>
             

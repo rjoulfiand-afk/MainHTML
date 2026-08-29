@@ -9,6 +9,15 @@ if (!isset($_SESSION["kg_isLoggedIn"]) || $_SESSION["kg_isLoggedIn"] !== true) {
 
 $query = "SELECT * FROM storage_unit ORDER BY id_gudang ASC";
 $result = mysqli_query($koneksi, $query);
+
+// AMBIL DATA BARANG HABIS BUAT LONCENG NOTIF
+$barang_habis = [];
+$q_habis = mysqli_query($koneksi, "SELECT nama_barang FROM inventory WHERE kuantitas_stok = 0 AND status_hapus = 0");
+if($q_habis) {
+    while($b = mysqli_fetch_assoc($q_habis)) {
+        $barang_habis[] = $b['nama_barang'];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -18,12 +27,10 @@ $result = mysqli_query($koneksi, $query);
     <title>Lokasi Gudang - KelolaStok</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-   
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
 
-   <!-- SIDEBAR -->
     <aside class="sidebar">
         <div>
             <div class="sidebar-header">
@@ -43,7 +50,6 @@ $result = mysqli_query($koneksi, $query);
             </ul>
         </div>
         
-        <!-- Footer Sidebar (Keluar Sistem diletakkan di bawah) -->
         <div class="sidebar-footer">
             <a href="actions/logout.php" class="btn-logout">
                 <i class="fa-solid fa-arrow-right-from-bracket"></i> Keluar Sistem
@@ -51,27 +57,48 @@ $result = mysqli_query($koneksi, $query);
         </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main class="main-content">
-        <!-- TOPBAR -->
         <header class="topbar">
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <!-- Input pencarian diberi id 'searchInput' -->
                 <input type="text" id="searchInput" placeholder="Cari nama gudang atau lokasi...">
             </div>
+            
             <div class="topbar-right">
-                <div class="notification">
+                <!-- FITUR LONCENG NOTIFIKASI -->
+                <div class="notification" id="btnNotif" style="position: relative; cursor: pointer;">
                     <i class="fa-regular fa-bell"></i>
-                    <span class="dot"></span>
+                    <?php if (!empty($barang_habis)) { echo '<span class="dot"></span>'; } ?>
+                    
+                    <div id="kotakNotif" style="display: none; position: absolute; right: 0; top: 40px; background: white; width: 280px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); padding: 15px; border: 1px solid #ddd; z-index: 100;">
+                        <h4 style="margin: 0 0 10px 0; font-size: 14px; border-bottom: 1px solid #eee; padding-bottom: 10px; color: #333;">Notifikasi Sistem</h4>
+                        <?php if(empty($barang_habis)): ?>
+                            <p style="font-size: 12px; color: #888; margin: 0;">Aman cuy, tidak ada peringatan restock.</p>
+                        <?php else: ?>
+                            <?php foreach($barang_habis as $b): ?>
+                                <div style="font-size: 12px; color: #d63031; margin-bottom: 8px; background: #fff0f0; padding: 8px; border-radius: 6px;">
+                                    <i class="fa-solid fa-circle-exclamation"></i> Stok <b><?= htmlspecialchars($b) ?></b> Habis!
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
                 </div>
-                <div class="profile-area">
+
+                <!-- FITUR PROFIL DROPDOWN -->
+                <div class="profile-area" id="btnProfile" style="position: relative; cursor: pointer;">
                     <div class="profile-info">
                         <h4><?= htmlspecialchars($_SESSION["kg_namaAdmin"] ?? 'Super Admin'); ?></h4>
                         <p>Super Admin</p>
                     </div>
-                    <div class="profile-pic">
-                        <i class="fa-solid fa-user"></i>
+                    <div class="profile-pic"><i class="fa-solid fa-user-tie"></i></div>
+                    
+                    <div id="kotakProfile" style="display: none; position: absolute; right: 0; top: 50px; background: white; width: 200px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 1px solid #ddd; z-index: 100; overflow: hidden;">
+                        <a href="riwayat_barang.php" style="display: block; padding: 12px 15px; color: #333; text-decoration: none; border-bottom: 1px solid #eee; font-size: 14px;">
+                            <i class="fa-solid fa-clock-rotate-left" style="margin-right: 8px;"></i> Riwayat Hapus
+                        </a>
+                        <a href="actions/logout.php" style="display: block; padding: 12px 15px; color: #d63031; text-decoration: none; font-size: 14px;">
+                            <i class="fa-solid fa-arrow-right-from-bracket" style="margin-right: 8px;"></i> Keluar Sistem
+                        </a>
                     </div>
                 </div>
             </div>
@@ -81,7 +108,6 @@ $result = mysqli_query($koneksi, $query);
             <div class="table-header">
                 <div>
                     <h3>Manajemen Lokasi Gudang</h3>
-                    <p>Kontrol penuh (CRUD) dan detail lokasi cabang penyimpanan.</p>
                 </div>
                 <button class="btn-add" id="btnTambahGudang">
                     <i class="fa-solid fa-plus"></i> Tambah Gudang
@@ -144,37 +170,39 @@ $result = mysqli_query($koneksi, $query);
     </div>
 
     <script>
+        // SCRIPT PENGENDALI KLIK LONCENG & PROFIL
+        document.getElementById('btnNotif').addEventListener('click', function() {
+            var kotak = document.getElementById('kotakNotif');
+            kotak.style.display = (kotak.style.display === 'none') ? 'block' : 'none';
+            document.getElementById('kotakProfile').style.display = 'none';
+        });
+        document.getElementById('btnProfile').addEventListener('click', function() {
+            var kotakProf = document.getElementById('kotakProfile');
+            kotakProf.style.display = (kotakProf.style.display === 'none') ? 'block' : 'none';
+            document.getElementById('kotakNotif').style.display = 'none';
+        });
+
         const modalTambah = document.getElementById('modalTambah');
         const btnTambahGudang = document.getElementById('btnTambahGudang');
         const btnCloseModal = document.getElementById('btnCloseModal');
         const btnCancelModal = document.getElementById('btnCancelModal');
 
-        btnTambahGudang.addEventListener('click', () => {
-            modalTambah.classList.add('show');
-        });
-
-        const tutupModal = () => {
-            modalTambah.classList.remove('show');
-        };
-
+        btnTambahGudang.addEventListener('click', () => { modalTambah.classList.add('show'); });
+        const tutupModal = () => { modalTambah.classList.remove('show'); };
         btnCloseModal.addEventListener('click', tutupModal);
         btnCancelModal.addEventListener('click', tutupModal);
         
-        // Tutup modal jika klik di luar box modal
         window.addEventListener('click', (e) => {
-            if (e.target === modalTambah) {
-                tutupModal();
-            }
+            if (e.target === modalTambah) { tutupModal(); }
         });
 
-        //Logika Live 
+        //Logika Live Search
         const searchInput = document.getElementById('searchInput');
         const tabelGudang = document.getElementById('tabelGudang');
         const trs = tabelGudang.getElementsByTagName('tr');
 
         searchInput.addEventListener('keyup', function() {
             const filter = searchInput.value.toLowerCase();
-            
             for (let i = 1; i < trs.length; i++) {
                 const tr = trs[i];
                 if (tr.id === 'emptyRow') continue;

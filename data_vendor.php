@@ -2,15 +2,22 @@
 session_start();
 include "config/koneksi.php";
 
-// Proteksi Halaman Login
 if (!isset($_SESSION["kg_isLoggedIn"]) || $_SESSION["kg_isLoggedIn"] !== true) {
     header("Location: index.html?error=unauthorized");
     exit;
 }
 
-// Mengambil data dari tabel vendor (menyesuaikan struktur database umum)
 $query = "SELECT * FROM vendor ORDER BY id_vendor ASC";
 $result = mysqli_query($koneksi, $query);
+
+// AMBIL DATA BARANG HABIS BUAT LONCENG NOTIF
+$barang_habis = [];
+$q_habis = mysqli_query($koneksi, "SELECT nama_barang FROM inventory WHERE kuantitas_stok = 0 AND status_hapus = 0");
+if($q_habis) {
+    while($b = mysqli_fetch_assoc($q_habis)) {
+        $barang_habis[] = $b['nama_barang'];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -20,13 +27,10 @@ $result = mysqli_query($koneksi, $query);
     <title>Data Vendor - KelolaStok</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Memanggil CSS sesuai struktur folder -->
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
 
-    <!-- SIDEBAR -->
     <aside class="sidebar">
         <div>
             <div class="sidebar-header">
@@ -42,12 +46,10 @@ $result = mysqli_query($koneksi, $query);
                 <li><a href="dashboard.php"><i class="fa-solid fa-border-all"></i> Dashboard Utama</a></li>
                 <li><a href="data_barang.php"><i class="fa-solid fa-box-archive"></i> Data Barang</a></li>
                 <li><a href="lokasi_gudang.php"><i class="fa-solid fa-warehouse"></i> Lokasi Gudang</a></li>
-                <!-- Menu Data Vendor Aktif -->
                 <li class="active"><a href="data_vendor.php"><i class="fa-solid fa-truck-field"></i> Data Vendor</a></li>
             </ul>
         </div>
         
-        <!-- Footer Sidebar (Keluar Sistem di bawah) -->
         <div class="sidebar-footer">
             <a href="actions/logout.php" class="btn-logout">
                 <i class="fa-solid fa-arrow-right-from-bracket"></i> Keluar Sistem
@@ -55,40 +57,58 @@ $result = mysqli_query($koneksi, $query);
         </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main class="main-content">
-        <!-- TOPBAR -->
         <header class="topbar">
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <!-- Input pencarian diberi id 'searchInput' -->
                 <input type="text" id="searchInput" placeholder="Cari nama vendor atau kontak...">
             </div>
+            
             <div class="topbar-right">
-                <div class="notification">
+                <!-- FITUR LONCENG NOTIFIKASI -->
+                <div class="notification" id="btnNotif" style="position: relative; cursor: pointer;">
                     <i class="fa-regular fa-bell"></i>
-                    <span class="dot"></span>
+                    <?php if (!empty($barang_habis)) { echo '<span class="dot"></span>'; } ?>
+                    
+                    <div id="kotakNotif" style="display: none; position: absolute; right: 0; top: 40px; background: white; width: 280px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); padding: 15px; border: 1px solid #ddd; z-index: 100;">
+                        <h4 style="margin: 0 0 10px 0; font-size: 14px; border-bottom: 1px solid #eee; padding-bottom: 10px; color: #333;">Notifikasi Sistem</h4>
+                        <?php if(empty($barang_habis)): ?>
+                            <p style="font-size: 12px; color: #888; margin: 0;">Aman cuy, tidak ada peringatan restock.</p>
+                        <?php else: ?>
+                            <?php foreach($barang_habis as $b): ?>
+                                <div style="font-size: 12px; color: #d63031; margin-bottom: 8px; background: #fff0f0; padding: 8px; border-radius: 6px;">
+                                    <i class="fa-solid fa-circle-exclamation"></i> Stok <b><?= htmlspecialchars($b) ?></b> Habis!
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
                 </div>
-                <div class="profile-area">
+
+                <!-- FITUR PROFIL DROPDOWN -->
+                <div class="profile-area" id="btnProfile" style="position: relative; cursor: pointer;">
                     <div class="profile-info">
                         <h4><?= htmlspecialchars($_SESSION["kg_namaAdmin"] ?? 'Super Admin'); ?></h4>
                         <p>Super Admin</p>
                     </div>
-                    <div class="profile-pic">
-                        <i class="fa-solid fa-user"></i>
+                    <div class="profile-pic"><i class="fa-solid fa-user-tie"></i></div>
+                    
+                    <div id="kotakProfile" style="display: none; position: absolute; right: 0; top: 50px; background: white; width: 200px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 1px solid #ddd; z-index: 100; overflow: hidden;">
+                        <a href="riwayat_barang.php" style="display: block; padding: 12px 15px; color: #333; text-decoration: none; border-bottom: 1px solid #eee; font-size: 14px;">
+                            <i class="fa-solid fa-clock-rotate-left" style="margin-right: 8px;"></i> Riwayat Hapus
+                        </a>
+                        <a href="actions/logout.php" style="display: block; padding: 12px 15px; color: #d63031; text-decoration: none; font-size: 14px;">
+                            <i class="fa-solid fa-arrow-right-from-bracket" style="margin-right: 8px;"></i> Keluar Sistem
+                        </a>
                     </div>
                 </div>
             </div>
         </header>
 
-        <!-- TABLE SECTION -->
         <section class="table-section">
             <div class="table-header">
                 <div>
                     <h3>Manajemen Data Vendor</h3>
-                    <p>Kontrol penuh (CRUD) dan daftar vendor/supplier barang.</p>
                 </div>
-                <!-- Tombol Tambah Vendor memicu modal -->
                 <button class="btn-add" id="btnTambahVendor">
                     <i class="fa-solid fa-plus"></i> Tambah Vendor
                 </button>
@@ -127,14 +147,12 @@ $result = mysqli_query($koneksi, $query);
         </section>
     </main>
 
-    <!-- MODAL POP-UP TAMBAH VENDOR -->
     <div class="modal-overlay" id="modalTambah">
         <div class="modal-box">
             <div class="modal-header">
                 <h3>Tambah Vendor Baru</h3>
                 <button class="btn-close" id="btnCloseModal"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <!-- Form mengarah ke folder actions/tambah_vendor.php sesuai struktur foldermu -->
             <form action="actions/tambah_vendor.php" method="POST">
                 <div class="input-group">
                     <label for="nama_vendor">Nama Vendor</label>
@@ -156,39 +174,40 @@ $result = mysqli_query($koneksi, $query);
         </div>
     </div>
 
-    <!-- SCRIPT INTERAKTIF (PENCARIAN & MODAL) -->
     <script>
-        // 1. Logika Modal Pop-up Tambah Vendor
+        // SCRIPT PENGENDALI KLIK LONCENG & PROFIL
+        document.getElementById('btnNotif').addEventListener('click', function() {
+            var kotak = document.getElementById('kotakNotif');
+            kotak.style.display = (kotak.style.display === 'none') ? 'block' : 'none';
+            document.getElementById('kotakProfile').style.display = 'none';
+        });
+        document.getElementById('btnProfile').addEventListener('click', function() {
+            var kotakProf = document.getElementById('kotakProfile');
+            kotakProf.style.display = (kotakProf.style.display === 'none') ? 'block' : 'none';
+            document.getElementById('kotakNotif').style.display = 'none';
+        });
+
         const modalTambah = document.getElementById('modalTambah');
         const btnTambahVendor = document.getElementById('btnTambahVendor');
         const btnCloseModal = document.getElementById('btnCloseModal');
         const btnCancelModal = document.getElementById('btnCancelModal');
 
-        btnTambahVendor.addEventListener('click', () => {
-            modalTambah.classList.add('show');
-        });
-
-        const tutupModal = () => {
-            modalTambah.classList.remove('show');
-        };
-
+        btnTambahVendor.addEventListener('click', () => { modalTambah.classList.add('show'); });
+        const tutupModal = () => { modalTambah.classList.remove('show'); };
         btnCloseModal.addEventListener('click', tutupModal);
         btnCancelModal.addEventListener('click', tutupModal);
         
         window.addEventListener('click', (e) => {
-            if (e.target === modalTambah) {
-                tutupModal();
-            }
+            if (e.target === modalTambah) { tutupModal(); }
         });
 
-        // 2. Logika Live Search Tabel Vendor
+        // Logika Live Search Tabel
         const searchInput = document.getElementById('searchInput');
         const tabelVendor = document.getElementById('tabelVendor');
         const trs = tabelVendor.getElementsByTagName('tr');
 
         searchInput.addEventListener('keyup', function() {
             const filter = searchInput.value.toLowerCase();
-            
             for (let i = 1; i < trs.length; i++) {
                 const tr = trs[i];
                 if (tr.id === 'emptyRow') continue;

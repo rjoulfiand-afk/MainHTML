@@ -14,7 +14,6 @@ if (!isset($_SESSION["kg_isLoggedIn"])) {
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* CSS Khusus Halaman Riwayat Biar Bersih & Fokus */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
         body { background-color: #f4f6f9; color: #333; padding: 40px 20px; }
         .container { max-width: 1000px; margin: 0 auto; }
@@ -43,7 +42,6 @@ if (!isset($_SESSION["kg_isLoggedIn"])) {
 </head>
 <body>
     <div class="container">
-        <!-- Tombol Kembali -->
         <div class="header-nav">
             <a href="dashboard.php" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard</a>
         </div>
@@ -74,7 +72,9 @@ if (!isset($_SESSION["kg_isLoggedIn"])) {
                                 <td style='font-weight: 600;'>{$row['nama_barang']}</td>
                                 <td><span class='badge-hapus'>Menunggu Dihapus</span></td>
                                 <td>
-                                    <a href='actions/restore_barang.php?id={$row['id_barang']}' class='btn-action btn-restore' title='Kembalikan Data'><i class='fa-solid fa-rotate-left'></i> Restore</a>
+                                    <!-- JALUR RESTORE SUDAH BENAR -->
+                                    <a href='actions/proses_barang.php?aksi=restore&id={$row['id_barang']}' class='btn-action btn-restore' title='Kembalikan Data'><i class='fa-solid fa-rotate-left'></i> Restore</a>
+                                    
                                     <button onclick='bukaModalAuth({$row['id_barang']}, \"{$row['nama_barang']}\")' class='btn-action btn-delete'><i class='fa-solid fa-skull'></i> Hapus Permanen</button>
                                 </td>
                             </tr>";
@@ -88,16 +88,17 @@ if (!isset($_SESSION["kg_isLoggedIn"])) {
         </section>
     </div>
 
-    <!-- MODAL AUTH DELETE (VERIFIKASI ADMIN) -->
+    <!-- MODAL AUTH DELETE -->
     <div id="modalAuth" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(26, 21, 37, 0.6); backdrop-filter: blur(4px); z-index:999; justify-content:center; align-items:center;">
         <div style="background: white; padding: 30px; border-radius: 16px; width: 420px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
             <i class="fa-solid fa-triangle-exclamation" style="font-size: 45px; color: #d63031; margin-bottom: 15px;"></i>
             <h3 style="margin-bottom: 8px; color: #1a1525;">Otorisasi Super Admin</h3>
             <p style="font-size: 13px; color: #6a6175; margin-bottom: 25px; line-height: 1.5;">Masukkan sandi admin untuk menghapus <b id="namaBarangHapus" style="color:#d63031;"></b> secara permanen. Data ini tidak bisa dikembalikan lagi!</p>
             
-            <form action="actions/hapus_permanen.php" method="POST">
+            <!-- JALUR HAPUS PERMANEN SUDAH BENAR -->
+            <form action="actions/proses_barang.php?aksi=hapus_permanen" method="POST">
                 <input type="hidden" name="id_barang_permanen" id="idBarangPermanen">
-                <input type="password" name="password_admin" placeholder="Masukkan Sandi Admin" required style="width: 100%; padding: 12px 15px; border: 1px solid #e5e9f2; border-radius: 10px; margin-bottom: 20px; outline: none; font-size: 14px; font-family: 'Outfit';">
+                <input type="password" name="password_admin" placeholder="Masukkan Sandi Admin (kg2026)" required style="width: 100%; padding: 12px 15px; border: 1px solid #e5e9f2; border-radius: 10px; margin-bottom: 20px; outline: none; font-size: 14px; font-family: 'Outfit';">
                 
                 <div style="display: flex; gap: 12px; justify-content: center;">
                     <button type="button" onclick="document.getElementById('modalAuth').style.display='none'" style="padding: 10px 20px; background: #f4f6f9; color: #6a6175; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: 'Outfit'; transition: 0.2s;">Batal</button>

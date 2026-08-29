@@ -33,7 +33,7 @@ $namaAdmin = $_SESSION["kg_namaAdmin"] ?? "Admin Utama";
             <li><a href="dashboard.php"><i class="fa-solid fa-border-all"></i> Dashboard Utama</a></li>
             <li class="active"><a href="data_barang.php"><i class="fa-solid fa-box-archive"></i> Data Barang</a></li>
             <li><a href="lokasi_gudang.php" class="sidebar-link"><i class="fa-solid fa-warehouse"></i> Lokasi Gudang</a></li>
-            <li><a href="data_vendor.php"><i class="fa-solid fa-truck-field"></i> Data Vendor</a></li>>
+            <li><a href="data_vendor.php"><i class="fa-solid fa-truck-field"></i> Data Vendor</a></li>
         </ul>
 
         <div class="sidebar-footer">
@@ -65,7 +65,7 @@ $namaAdmin = $_SESSION["kg_namaAdmin"] ?? "Admin Utama";
             <div class="table-header">
                 <div>
                     <h3>Manajemen Data Barang</h3>
-                    <p>Kontrol penuh (CRUD) dan detail rinci produk</p>
+
                 </div>
                 <div style="display: flex; gap: 12px; align-items: center;">
                     <!-- Filter A-Z Sederhana -->
