@@ -7,6 +7,15 @@ if (!isset($_SESSION["kg_isLoggedIn"]) || $_SESSION["kg_isLoggedIn"] !== true) {
     exit;
 }
 $namaAdmin = $_SESSION["kg_namaAdmin"] ?? "Admin Utama";
+
+// AMBIL DATA BARANG HABIS BUAT LONCENG NOTIF
+$barang_habis = [];
+$q_habis = mysqli_query($koneksi, "SELECT nama_barang FROM inventory WHERE kuantitas_stok = 0 AND status_hapus = 0");
+if($q_habis) {
+    while($b = mysqli_fetch_assoc($q_habis)) {
+        $barang_habis[] = $b['nama_barang'];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -51,12 +60,41 @@ $namaAdmin = $_SESSION["kg_namaAdmin"] ?? "Admin Utama";
             </div>
             
             <div class="topbar-right">
-                <div class="profile-area">
+                <!-- FITUR LONCENG NOTIFIKASI -->
+                <div class="notification" id="btnNotif" style="position: relative; cursor: pointer;">
+                    <i class="fa-regular fa-bell"></i>
+                    <?php if (!empty($barang_habis)) { echo '<span class="dot"></span>'; } ?>
+                    
+                    <div id="kotakNotif" style="display: none; position: absolute; right: 0; top: 40px; background: white; width: 280px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); padding: 15px; border: 1px solid #ddd; z-index: 100;">
+                        <h4 style="margin: 0 0 10px 0; font-size: 14px; border-bottom: 1px solid #eee; padding-bottom: 10px; color: #333;">Notifikasi Sistem</h4>
+                        <?php if(empty($barang_habis)): ?>
+                            <p style="font-size: 12px; color: #888; margin: 0;">Aman cuy, tidak ada peringatan restock.</p>
+                        <?php else: ?>
+                            <?php foreach($barang_habis as $b): ?>
+                                <div style="font-size: 12px; color: #d63031; margin-bottom: 8px; background: #fff0f0; padding: 8px; border-radius: 6px;">
+                                    <i class="fa-solid fa-circle-exclamation"></i> Stok <b><?= htmlspecialchars($b) ?></b> Habis!
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <!-- FITUR PROFIL DROPDOWN -->
+                <div class="profile-area" id="btnProfile" style="position: relative; cursor: pointer;">
                     <div class="profile-info">
                         <h4><?php echo htmlspecialchars($namaAdmin); ?></h4>
                         <p>Super Admin</p>
                     </div>
                     <div class="profile-pic"><i class="fa-solid fa-user-tie"></i></div>
+                    
+                    <div id="kotakProfile" style="display: none; position: absolute; right: 0; top: 50px; background: white; width: 200px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 1px solid #ddd; z-index: 100; overflow: hidden;">
+                        <a href="riwayat_barang.php" style="display: block; padding: 12px 15px; color: #333; text-decoration: none; border-bottom: 1px solid #eee; font-size: 14px;">
+                            <i class="fa-solid fa-clock-rotate-left" style="margin-right: 8px;"></i> Riwayat Hapus
+                        </a>
+                        <a href="actions/logout.php" style="display: block; padding: 12px 15px; color: #d63031; text-decoration: none; font-size: 14px;">
+                            <i class="fa-solid fa-arrow-right-from-bracket" style="margin-right: 8px;"></i> Keluar Sistem
+                        </a>
+                    </div>
                 </div>
             </div>
         </header>
@@ -65,7 +103,6 @@ $namaAdmin = $_SESSION["kg_namaAdmin"] ?? "Admin Utama";
             <div class="table-header">
                 <div>
                     <h3>Manajemen Data Barang</h3>
-
                 </div>
                 <div style="display: flex; gap: 12px; align-items: center;">
                     <!-- Filter A-Z Sederhana -->
@@ -125,7 +162,7 @@ $namaAdmin = $_SESSION["kg_namaAdmin"] ?? "Admin Utama";
                                 <td>" . htmlspecialchars($row['nama_vendor'] ?? '-') . "</td>
                                 <td class='action-cell'>
                                     <button class='btn-icon edit' onclick='bukaEdit($id_brg, \"$sn\", \"$nama\", \"$jenis\", $stok, $harga, \"$id_g\", \"$id_v\")'><i class='fa-solid fa-pen'></i></button>
-                                    <a href='actions/hapus_barang.php?id=$id_brg' class='btn-icon delete' onclick='return confirm(\"Yakin hapus $nama?\")'><i class='fa-solid fa-trash'></i></a>
+                                    <a href='actions/proses_barang.php?aksi=soft_delete&id=$id_brg' class='btn-icon delete' onclick='return confirm(\"Yakin hapus $nama?\")'><i class='fa-solid fa-trash'></i></a>
                                 </td>
                             </tr>";
                         }
@@ -143,7 +180,7 @@ $namaAdmin = $_SESSION["kg_namaAdmin"] ?? "Admin Utama";
                 <h3>Tambah Barang Baru</h3>
                 <button class="btn-close" id="btnCloseAdd"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <form action="actions/tambah_barang.php" method="POST">
+            <form action="actions/proses_barang.php?aksi=tambah" method="POST">
                 <div class="input-group"><label>Serial Number</label><input type="text" name="serial_number" required></div>
                 <div class="input-group"><label>Nama Barang</label><input type="text" name="nama_barang" required></div>
                 <div class="input-group"><label>Jenis Barang</label><input type="text" name="jenis_barang" required></div>
@@ -182,7 +219,7 @@ $namaAdmin = $_SESSION["kg_namaAdmin"] ?? "Admin Utama";
                 <h3>Edit Data Barang</h3>
                 <button class="btn-close" id="btnCloseEdit"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <form action="actions/edit_barang.php" method="POST">
+            <form action="actions/proses_barang.php?aksi=edit" method="POST">
                 <input type="hidden" name="id_barang" id="edit_id">
                 <div class="input-group"><label>Serial Number</label><input type="text" name="serial_number" id="edit_sn" required></div>
                 <div class="input-group"><label>Nama Barang</label><input type="text" name="nama_barang" id="edit_nama" required></div>
@@ -216,6 +253,18 @@ $namaAdmin = $_SESSION["kg_namaAdmin"] ?? "Admin Utama";
     </div>
 
     <script>
+        // SCRIPT PENGENDALI KLIK LONCENG & PROFIL
+        document.getElementById('btnNotif').addEventListener('click', function() {
+            var kotak = document.getElementById('kotakNotif');
+            kotak.style.display = (kotak.style.display === 'none') ? 'block' : 'none';
+            document.getElementById('kotakProfile').style.display = 'none';
+        });
+        document.getElementById('btnProfile').addEventListener('click', function() {
+            var kotakProf = document.getElementById('kotakProfile');
+            kotakProf.style.display = (kotakProf.style.display === 'none') ? 'block' : 'none';
+            document.getElementById('kotakNotif').style.display = 'none';
+        });
+
         // FITUR SEARCH BARANG
         const searchInput = document.getElementById("pencarianDetail");
         const tbody = document.querySelector("#tabelDataBarang tbody");
@@ -248,7 +297,7 @@ $namaAdmin = $_SESSION["kg_namaAdmin"] ?? "Admin Utama";
             }
         });
 
-        // LOGIKA MODAL POP-UP TAMBAH & EDIT (Tanpa harus otak-atik script.js)
+        // LOGIKA MODAL POP-UP TAMBAH & EDIT
         const modalAdd = document.getElementById("modalTambah");
         const modalEdit = document.getElementById("modalEdit");
 
