@@ -36,7 +36,6 @@ if($q_habis) {
                 <p>Kelompok Ganteng</p>
             </div>
         </div>
-        
         <p class="menu-label">MENU UTAMA</p>
         <ul class="nav-links">
             <li><a href="dashboard.php"><i class="fa-solid fa-border-all"></i> Dashboard Utama</a></li>
@@ -68,7 +67,7 @@ if($q_habis) {
                     <div id="kotakNotif" style="display: none; position: absolute; right: 0; top: 40px; background: white; width: 280px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); padding: 15px; border: 1px solid #ddd; z-index: 100;">
                         <h4 style="margin: 0 0 10px 0; font-size: 14px; border-bottom: 1px solid #eee; padding-bottom: 10px; color: #333;">Notifikasi Sistem</h4>
                         <?php if(empty($barang_habis)): ?>
-                            <p style="font-size: 12px; color: #888; margin: 0;">Aman cuy, tidak ada peringatan restock.</p>
+                            <p style="font-size: 12px; color: #888; margin: 0;">Aman, tidak ada peringatan restock.</p>
                         <?php else: ?>
                             <?php foreach($barang_habis as $b): ?>
                                 <div style="font-size: 12px; color: #d63031; margin-bottom: 8px; background: #fff0f0; padding: 8px; border-radius: 6px;">

@@ -8,7 +8,6 @@ if (!isset($_SESSION["kg_isLoggedIn"]) || $_SESSION["kg_isLoggedIn"] !== true) {
 include "config/koneksi.php";
 $namaAdmin = $_SESSION["kg_namaAdmin"] ?? "Admin";
 
-// --- AMBIL SEMUA DATA STATISTIK DI AWAL ---
 $q_stok = mysqli_query($koneksi, "SELECT SUM(kuantitas_stok) AS total_stok FROM inventory WHERE status_hapus = 0");
 $tot_stok = mysqli_fetch_assoc($q_stok)['total_stok'] ?? 0;
 
@@ -102,8 +101,6 @@ while($b = mysqli_fetch_assoc($q_habis)) {
                         <p>Super Admin</p>
                     </div>
                     <div class="profile-pic"><i class="fa-solid fa-user-tie"></i></div>
-                    
-                    <!-- KOTAK MENU DROPDOWN (Awalnya Sembunyi) -->
                     <div id="kotakProfile" style="display: none; position: absolute; right: 0; top: 50px; background: white; width: 200px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 1px solid #ddd; z-index: 100; overflow: hidden;">
                         <a href="riwayat_barang.php" style="display: block; padding: 12px 15px; color: #333; text-decoration: none; border-bottom: 1px solid #eee; font-size: 14px;">
                             <i class="fa-solid fa-clock-rotate-left" style="margin-right: 8px;"></i> Riwayat Hapus
@@ -113,8 +110,8 @@ while($b = mysqli_fetch_assoc($q_habis)) {
                         </a>
                     </div>
                 </div>
-            </div> <!-- NAH INI PENUTUP TOPBAR-RIGHT YANG TADI ILANG -->
-        </header> <!-- DAN INI PENUTUP HEADERNYA -->
+            </div> 
+        </header> 
 
         <script>
             document.getElementById('btnNotif').addEventListener('click', function() {
